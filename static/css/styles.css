@@ -167,6 +167,7 @@ a {
 .pet-box {
   border-radius: 25px;
   background-color: white;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
 }
 
 .pet-imp,
@@ -188,7 +189,7 @@ a {
 .holder-cont {
   height: 200px;
   width: 200px;
-  background-color: #d9d9d9;
+  /* background-color: #d9d9d9; */
   border-radius: 25px;
 }
 
@@ -198,8 +199,21 @@ a {
   object-fit: cover;
 }
 
+.search-bar {
+  margin-left: 40px;
+  margin-bottom: 20px;
+}
+
+#pet-search {
+  padding: 10px;
+  border-radius: 25px;
+  width: 400px;
+  border: 1px solid black;
+}
+
 .ava-pets {
   margin: 40px 40px;
+  /* margin-bottom: 20px; */
 }
 
 .ava-pets h2 {
@@ -213,14 +227,18 @@ a {
 }
 
 .bg-ava {
-  background-color: red;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
   height: 100%;
-  z-index: -1;
-  border-radius: 25px;
+}
+
+.ava-cont {
+  background-color: var(--off-white);
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
 }
 
 .pet-card {
@@ -228,10 +246,12 @@ a {
   flex-direction: column;
   justify-content: end;
   border-radius: 25px;
-  background-color: blue;
+  /* background-color: blue; */
   position: relative;
   height: 300px;
   width: calc(100% / 3);
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+  background-color: var(--off-white);
 }
 
 .pet-card-cont {
@@ -244,7 +264,7 @@ a {
   position: absolute;
   right: 15px;
   top: 15px;
-  padding: 5px 20px;
+  padding: 10px;
   background-color: #92cdeb;
   border-radius: 25px;
 }
@@ -254,8 +274,18 @@ a {
 }
 
 .pet-name {
+  padding-top: 10px;
   font-size: 32px;
   font-weight: 600;
+}
+
+.pet-cart {
+  margin: 0 0 15px 15px;
+  padding: 10px;
+  background-color: #92cdeb;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
 }
 
 .pet-maint {
@@ -267,7 +297,7 @@ a {
   margin-top: 10px;
   font-size: 20px;
   font-weight: 400;
-  padding-bottom: 15px;
+  padding-bottom: 5px;
 }
 
 .pet-id {

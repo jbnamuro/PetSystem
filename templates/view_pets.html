@@ -4,35 +4,70 @@
   <p>Find pets by rarity, price and lifestyle needs</p>
 </div>
 
+<!-- Search bar (no CSS included) -->
+<div class="search-bar">
+  <input
+    id="pet-search"
+    type="search"
+    placeholder="Search pets by name, rarity, ID, maintenance or price"
+  />
+</div>
+
 <div class="pet-card-cont">
   {% for p in pets %}
   <div class="pet-card">
-    <img src="" alt="temp" class="bg-ava" />
+    <div class="ava-cont">
+      <img
+        src="{{ url_for('static', filename='../static/pet-imgs/' + p[0]|string + '.png') }}"
+        alt="Pet {{ p[1] }}"
+        alt="Holder"
+        class="bg-ava"
+      />
+    </div>
     <p class="pet-name">{{p[1]}}</p>
     <p class="pet-maint">{{p[4]}}</p>
     <p class="pet-price">${{p[6]}}</p>
+    <form action="{{ url_for('add_to_cart', pet_id=p[0]) }}" method="post">
+      <button class="pet-cart">Add to Cart</button>
+    </form>
+
     <p class="rarity">{{p[3]}}</p>
     <p class="pet-id">ID: {{p[0]}}</p>
   </div>
   {% endfor %}
 </div>
-<table class="table table-striped">
-  <tbody>
-    {% for p in pets %}
-    <tr>
-      <td>{{ p[0] }}</td>
-      <td>{{ p[1] }}</td>
-      <td>${{ p[6] }}</td>
-      <td>{{ p[5] }}</td>
-      <td>
-        {% if session.role == 'User' %}
-        <form action="{{ url_for('add_to_cart', pet_id=p[0]) }}" method="post">
-          <button class="btn btn-sm btn-success">Add to Cart</button>
-        </form>
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<script>
+  // Client-side search/filter for pet cards
+  document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById("pet-search");
+    if (!input) return;
+    const cardsContainer = document.querySelector(".pet-card-cont");
+    const cards = () =>
+      cardsContainer
+        ? Array.from(cardsContainer.querySelectorAll(".pet-card"))
+        : [];
+
+    function normalize(text) {
+      return (text || "").toString().toLowerCase();
+    }
+
+    input.addEventListener("input", function () {
+      const q = normalize(this.value).trim();
+      if (!q) {
+        cards().forEach((c) => (c.style.display = ""));
+        return;
+      }
+
+      cards().forEach((card) => {
+        const name = normalize(card.querySelector(".pet-name")?.textContent);
+        const rarity = normalize(card.querySelector(".rarity")?.textContent);
+        const id = normalize(card.querySelector(".pet-id")?.textContent);
+        const maint = normalize(card.querySelector(".pet-maint")?.textContent);
+        const price = normalize(card.querySelector(".pet-price")?.textContent);
+        const hay = [name, rarity, id, maint, price].join(" ");
+        card.style.display = hay.includes(q) ? "" : "none";
+      });
+    });
+  });
+</script>
 {% endblock %}
