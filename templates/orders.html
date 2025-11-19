@@ -1,0 +1,36 @@
+{% extends "base.html" %} {% block content %}
+<h2 class="mb-3">Orders</h2>
+
+<table class="table table-striped">
+  <thead class="table-dark">
+    <tr>
+      {% if role in ['Admin', 'Staff'] %}
+      <th>Order ID</th>
+      <th>Username</th>
+      <th>Total</th>
+      <th>Date</th>
+      {% else %}
+      <th>Order ID</th>
+      <th>Total</th>
+      <th>Date</th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for o in orders %}
+    <tr>
+      {% if role in ['Admin', 'Staff'] %}
+      <td>{{ o[0] }}</td>
+      <td>{{ o[1] }}</td>
+      <td>${{ o[2] }}</td>
+      <td>{{ o[3] }}</td>
+      {% else %}
+      <td>{{ o[0] }}</td>
+      <td>${{ o[1] }}</td>
+      <td>{{ o[2] }}</td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

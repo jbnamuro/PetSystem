@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block content %}
+<div class="ava-pets">
+  <h2>Available Pets</h2>
+  <p>Find pets by rarity, price and lifestyle needs</p>
+</div>
+
+<div class="pet-card-cont">
+  {% for p in pets %}
+  <div class="pet-card">
+    <img src="" alt="temp" class="bg-ava" />
+    <p class="pet-name">{{p[1]}}</p>
+    <p class="pet-maint">{{p[4]}}</p>
+    <p class="pet-price">${{p[6]}}</p>
+    <p class="rarity">{{p[3]}}</p>
+    <p class="pet-id">ID: {{p[0]}}</p>
+  </div>
+  {% endfor %}
+</div>
+<table class="table table-striped">
+  <tbody>
+    {% for p in pets %}
+    <tr>
+      <td>{{ p[0] }}</td>
+      <td>{{ p[1] }}</td>
+      <td>${{ p[6] }}</td>
+      <td>{{ p[5] }}</td>
+      <td>
+        {% if session.role == 'User' %}
+        <form action="{{ url_for('add_to_cart', pet_id=p[0]) }}" method="post">
+          <button class="btn btn-sm btn-success">Add to Cart</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
