@@ -561,10 +561,117 @@ BEGIN
 	DELETE FROM cartitems WHERE CartID = v_cart_id;
     
     COMMIT;
+
     
 	-- Return final order summary
 	CALL get_order_details(v_order_id);
 END ;;
+
+
+/*!50003 DROP TRIGGER IF EXISTS `trg_before_add_to_cart` */;
+DELIMITER ;;
+CREATE TRIGGER `trg_before_add_to_cart`
+BEFORE INSERT ON cartitems
+FOR EACH ROW
+BEGIN
+    -- Ensure pet is still available
+    IF (SELECT Status FROM pets WHERE PetID = NEW.PetID) <> 'Available' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Pet is not available.';
+    END IF;
+END;;
+DELIMITER ;
+
+
+
+/*!50003 DROP TRIGGER IF EXISTS `trg_after_add_to_cart` */;
+DELIMITER ;;
+CREATE TRIGGER `trg_after_add_to_cart`
+AFTER INSERT ON cartitems
+FOR EACH ROW
+BEGIN
+    -- Mark pet as reserved
+    UPDATE pets
+    SET Status = 'Reserved'
+    WHERE PetID = NEW.PetID;
+END;;
+DELIMITER ;
+
+
+
+/*!50003 DROP TRIGGER IF EXISTS `trg_after_insert_orderitem` */;
+DELIMITER ;;
+CREATE TRIGGER `trg_after_insert_orderitem`
+AFTER INSERT ON orderitems
+FOR EACH ROW
+BEGIN
+    -- Update Total Price in Orders table
+    UPDATE orders
+    SET TotalPrice = (
+        SELECT SUM(Price) FROM orderitems WHERE OrderID = NEW.OrderID
+    )
+    WHERE OrderID = NEW.OrderID;
+    
+    -- Mark Pet as Adopted
+    UPDATE pets
+    SET Status = 'Adopted'
+    WHERE PetID = NEW.PetID;
+END;;
+DELIMITER ;
+
+
+
+/*!50003 DROP TRIGGER IF EXISTS `trg_before_insert_orderitem` */;
+DELIMITER ;;
+CREATE TRIGGER `trg_before_insert_orderitem`
+BEFORE INSERT ON orderitems
+FOR EACH ROW
+BEGIN
+    DECLARE pet_price DECIMAL(10,2);
+
+    -- Load price automatically
+    SELECT Price INTO pet_price FROM pets WHERE PetID = NEW.PetID;
+    SET NEW.Price = pet_price;
+END;;
+DELIMITER ;
+
+
+
+/*!50003 DROP TRIGGER IF EXISTS `trg_after_pet_adopted_cleanup` */;
+DELIMITER ;;
+CREATE TRIGGER `trg_after_pet_adopted_cleanup`
+AFTER UPDATE ON pets
+FOR EACH ROW
+BEGIN
+    -- If pet became adopted, remove all cart references
+    IF NEW.Status = 'Adopted' THEN
+        DELETE FROM cartitems WHERE PetID = NEW.PetID;
+    END IF;
+END;;
+DELIMITER ;
+
+
+
+/*!50003 DROP TRIGGER IF EXISTS `trg_after_order_created` */;
+DELIMITER ;;
+CREATE TRIGGER `trg_after_order_created`
+AFTER INSERT ON orders
+FOR EACH ROW
+BEGIN
+    -- Empty user cart after successful order
+    DELETE FROM cartitems
+    WHERE CartID IN (
+        SELECT CartID FROM shoppingcart WHERE UserID = NEW.UserID
+    );
+END;;
+DELIMITER ;
+
+
+
+
+
+
+
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
