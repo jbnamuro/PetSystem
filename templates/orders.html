@@ -1,36 +1,46 @@
 {% extends "base.html" %} {% block content %}
-<h2 class="mb-3">Orders</h2>
+<div class="page-head">
+  <!-- <p>Home > Cart</p> -->
+  <h2>Orders</h2>
+  <p>Status on pet orders.</p>
+</div>
 
-<table class="table table-striped">
-  <thead class="table-dark">
-    <tr>
-      {% if role in ['Admin', 'Staff'] %}
-      <th>Order ID</th>
-      <th>Username</th>
-      <th>Total</th>
-      <th>Date</th>
-      {% else %}
-      <th>Order ID</th>
-      <th>Total</th>
-      <th>Date</th>
-      {% endif %}
-    </tr>
-  </thead>
-  <tbody>
-    {% for o in orders %}
-    <tr>
-      {% if role in ['Admin', 'Staff'] %}
-      <td>{{ o[0] }}</td>
-      <td>{{ o[1] }}</td>
-      <td>${{ o[2] }}</td>
-      <td>{{ o[3] }}</td>
-      {% else %}
-      <td>{{ o[0] }}</td>
-      <td>${{ o[1] }}</td>
-      <td>{{ o[2] }}</td>
-      {% endif %}
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="table-cont">
+  <table class="">
+    <thead class="">
+      <tr class="header-tr">
+        {% if role in ['Admin', 'Staff'] %}
+        <th style="width: 12%">No.</th>
+        <th style="width: 12%">Order ID</th>
+        <th style="width: 25%">Username</th>
+        <th style="width: 25%">Total</th>
+        <th style="width: 25%">Date</th>
+        {% else %}
+        <th style="width: 20%">No.</th>
+        <th style="width: 20%">Order ID</th>
+        <th style="width: 30%">Date</th>
+        <th style="width: 30%">Total</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        {% if role in ['Admin', 'Staff'] %}
+        <td>{{loop.index}}</td>
+        <td>{{ o[0] }}</td>
+        <td>{{ o[1] }}</td>
+        <td>${{ o[2] }}</td>
+        <td>{{ o[3] }}</td>
+        {% else %}
+        <td>{{loop.index}}</td>
+        <td>{{ o[0] }}</td>
+        <td>{{ o[1] }}</td>
+        <td>${{ o[2] }}</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}

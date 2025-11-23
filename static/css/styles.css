@@ -337,6 +337,7 @@ a {
   border-radius: 25px;
   padding: 10px;
   height: fit-content;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
 }
 
 .cart-summary {
@@ -345,6 +346,7 @@ a {
   padding: 10px;
   width: 40%;
   padding-left: 15px;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
 }
 
 .cart-summary h3 {
@@ -463,4 +465,36 @@ a {
   color: gray;
   font-size: 25px;
   text-align: center;
+}
+
+.table-cont {
+  margin: 0 40px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 25px;
+}
+
+thead {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+th,
+td {
+  padding: 15px;
+}
+
+th {
+  text-align: left;
+}
+
+th:first-child {
+  border-top-left-radius: 25px;
+}
+
+th:last-child {
+  border-top-right-radius: 25px;
 }
