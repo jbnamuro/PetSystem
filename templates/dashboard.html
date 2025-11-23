@@ -1,132 +1,135 @@
 {% extends "base.html" %} {% block content %}
 <head> </head>
-<div class="img-cont">
+<!-- <div class="img-cont">
   <img src="../static/imgs/bg-img.jpg" alt="" class="bg-img" />
-</div>
+</div> -->
 
-<h1 class="find">Find Your<br />Forever Friend</h1>
-<h2 class="welcome">Welcome, {{ username }}!</h2>
+<div class="dashboard-cont">
+  <div class="background-img"></div>
+  <h1 class="find">Find Your<br />Forever Friend</h1>
+  <h2 class="welcome">Welcome, {{ username }}!</h2>
 
-{% if role == 'Admin' %}
-<div class="box-container">
-  <a class="btn-info" href="{{ url_for('users') }}">
-    <div class="box-c1">
-      <div class="home-box">
-        <div>
-          <img src="../static/imgs/user.svg" alt="" />
-          <p class="semi">Manage Users</p>
+  {% if role == 'Admin' %}
+  <div class="box-container">
+    <a class="btn-info" href="{{ url_for('users') }}">
+      <div class="box-c1">
+        <div class="home-box">
+          <div>
+            <img src="../static/imgs/user.svg" alt="" />
+            <p class="semi">Manage Users</p>
+          </div>
+          <p>Edit profiles, roles, and access rights for all account holders</p>
         </div>
-        <p>Edit profiles, roles, and access rights for all account holders</p>
-      </div>
-    </div>
-  </a>
-  <a class="btn btn-info me-2" href="{{ url_for('pets') }}">
-    <div class="box-c2">
-      <div class="home-box">
-        <div>
-          <img src="../static/imgs/Pets.svg" alt="" />
-          <p class="semi">Manage Pets</p>
-        </div>
-        <p>Add new animals, update existing profiles, and view pet details</p>
-      </div>
-    </div>
-  </a>
-  <a class="btn btn-info" href="{{ url_for('orders') }}"
-    ><div class="box-c3">
-      <div class="home-box">
-        <div>
-          <img src="../static/imgs/order.svg" alt="" />
-          <p class="semi">View Orders</p>
-        </div>
-        <p>Track current, pending, and past sales related to pet adoption</p>
-      </div>
-    </div></a
-  >
-</div>
-
-{% elif role == 'Staff' %}
-<div class="box-container">
-  <a class="btn btn-info me-2" href="{{ url_for('pets') }}">
-    <div class="box-c2">
-      <div class="home-box">
-        <div>
-          <img src="../static/imgs/Pets.svg" alt="" />
-          <p class="semi">Manage Pets</p>
-        </div>
-        <p>Add new animals, update existing profiles, and view pet details</p>
-      </div>
-    </div>
-  </a>
-  <a class="btn btn-info" href="{{ url_for('orders') }}"
-    ><div class="box-c3">
-      <div class="home-box">
-        <div>
-          <img src="../static/imgs/order.svg" alt="" />
-          <p class="semi">View Orders</p>
-        </div>
-        <p>Track current, pending, and past sales related to pet adoption</p>
-      </div>
-    </div></a
-  >
-</div>
-
-{% else %}
-<div class="box-container">
-  <a class="btn-info" href="{{ url_for('view_pets') }}">
-    <div class="box-c1">
-      <div class="home-box">
-        <div>
-          <img src="../static/imgs/view.svg" alt="" />
-          <p class="semi">View Pets</p>
-        </div>
-        <p>Explore pets by rarity, price & maintenance</p>
-      </div>
-    </div>
-  </a>
-  <a class="btn btn-info me-2" href="{{ url_for('cart') }}">
-    <div class="box-c2">
-      <div class="home-box">
-        <div>
-          <img src="../static/imgs/mycart.svg" alt="" />
-          <p class="semi">My Cart</p>
-        </div>
-        <p>Review your selections before checkout</p>
-      </div>
-    </div>
-  </a>
-  <a class="btn btn-info" href="{{ url_for('orders') }}"
-    ><div class="box-c3">
-      <div class="home-box">
-        <div>
-          <img src="../static/imgs/order.svg" alt="" />
-          <p class="semi">My Orders</p>
-        </div>
-        <p>See status updates on all your pet orders</p>
-      </div>
-    </div></a
-  >
-</div>
-{% endif %}
-
-<div class="featured">
-  <p class="feat-pet">Featured Pets</p>
-  <div class="pet-box-cont">
-    {% for p in pets %}
-    <a href="{{ url_for('view_pets') }}">
-      <div class="pet-box">
-        <div class="holder-cont">
-          <img
-            src="{{ url_for('static', filename='../static/pet-imgs/' + p[0]|string + '.png') }}"
-            alt="Pet {{ p[1] }}"
-            alt="Holder"
-          />
-        </div>
-        <p class="pet-imp">{{ p[1] }}</p>
-        <p class="maintenance">{{ p[4] }}</p>
-        <p class="pet-imp2">${{ p[6] }}</p>
       </div>
     </a>
-    {% endfor %}
+    <a class="btn btn-info me-2" href="{{ url_for('pets') }}">
+      <div class="box-c2">
+        <div class="home-box">
+          <div>
+            <img src="../static/imgs/Pets.svg" alt="" />
+            <p class="semi">Manage Pets</p>
+          </div>
+          <p>Add new animals, update existing profiles, and view pet details</p>
+        </div>
+      </div>
+    </a>
+    <a class="btn btn-info" href="{{ url_for('orders') }}"
+      ><div class="box-c3">
+        <div class="home-box">
+          <div>
+            <img src="../static/imgs/order.svg" alt="" />
+            <p class="semi">View Orders</p>
+          </div>
+          <p>Track current, pending, and past sales related to pet adoption</p>
+        </div>
+      </div></a
+    >
+  </div>
+
+  {% elif role == 'Staff' %}
+  <div class="box-container">
+    <a class="btn btn-info me-2" href="{{ url_for('pets') }}">
+      <div class="box-c2">
+        <div class="home-box">
+          <div>
+            <img src="../static/imgs/Pets.svg" alt="" />
+            <p class="semi">Manage Pets</p>
+          </div>
+          <p>Add new animals, update existing profiles, and view pet details</p>
+        </div>
+      </div>
+    </a>
+    <a class="btn btn-info" href="{{ url_for('orders') }}"
+      ><div class="box-c3">
+        <div class="home-box">
+          <div>
+            <img src="../static/imgs/order.svg" alt="" />
+            <p class="semi">View Orders</p>
+          </div>
+          <p>Track current, pending, and past sales related to pet adoption</p>
+        </div>
+      </div></a
+    >
+  </div>
+
+  {% else %}
+  <div class="box-container">
+    <a class="btn-info" href="{{ url_for('view_pets') }}">
+      <div class="box-c1">
+        <div class="home-box">
+          <div>
+            <img src="../static/imgs/view.svg" alt="" />
+            <p class="semi">View Pets</p>
+          </div>
+          <p>Explore pets by rarity, price & maintenance</p>
+        </div>
+      </div>
+    </a>
+    <a class="btn btn-info me-2" href="{{ url_for('cart') }}">
+      <div class="box-c2">
+        <div class="home-box">
+          <div>
+            <img src="../static/imgs/mycart.svg" alt="" />
+            <p class="semi">My Cart</p>
+          </div>
+          <p>Review your selections before checkout</p>
+        </div>
+      </div>
+    </a>
+    <a class="btn btn-info" href="{{ url_for('orders') }}"
+      ><div class="box-c3">
+        <div class="home-box">
+          <div>
+            <img src="../static/imgs/order.svg" alt="" />
+            <p class="semi">My Orders</p>
+          </div>
+          <p>See status updates on all your pet orders</p>
+        </div>
+      </div></a
+    >
+  </div>
+  {% endif %}
+
+  <div class="featured">
+    <p class="feat-pet">Featured Pets</p>
+    <div class="pet-box-cont">
+      {% for p in pets %}
+      <a href="{{ url_for('view_pets') }}">
+        <div class="pet-box">
+          <div class="holder-cont">
+            <img
+              src="{{ url_for('static', filename='../static/pet-imgs/' + p[0]|string + '.png') }}"
+              alt="Pet {{ p[1] }}"
+              alt="Holder"
+            />
+          </div>
+          <p class="pet-imp">{{ p[1] }}</p>
+          <p class="maintenance">{{ p[4] }}</p>
+          <p class="pet-imp2">${{ p[6] }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
   </div>
 </div>
 
