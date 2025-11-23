@@ -192,7 +192,16 @@ def cart():
         return redirect(url_for("login"))
     try:
         items = call_proc_fetchall('get_cart_details', (session["user_id"],))
-        return render_template("cart.html", items=items)
+        # Calculate subtotal from items. Price is expected at index 5 in each item row.
+        try:
+            subtotal = sum(float(it[5]) for it in items)
+        except Exception:
+            subtotal = 0.0
+        # Tax and total
+        tax_rate = 0.13
+        tax = round(subtotal * tax_rate, 2)
+        total = round(subtotal + tax, 2)
+        return render_template("cart.html", items=items, subtotal=subtotal, tax=tax, total=total)
     except Exception as e:
         flash(f"Unable to load cart: {e}", "danger")
         return redirect(url_for("dashboard"))

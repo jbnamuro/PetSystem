@@ -1,32 +1,76 @@
-{% extends "base.html" %}
-{% block content %}
-<h2 class="mb-3">Your Cart</h2>
+{% extends "base.html" %} {% block content %}
+<div class="page-head">
+  <!-- <p>Home > Cart</p> -->
+  <h2>Shopping Cart</h2>
+  <p>Review your selections before checkout.</p>
+</div>
 
-{% if items %}
-  <table class="table">
-    <thead class="table-dark"><tr><th>CartID</th><th>CartItemID</th><th>PetID</th><th>PetName</th><th>Species</th><th>Price</th><th>Action</th></tr></thead>
-    <tbody>
+<div class="full-cart">
+  {% if items %}
+  <div class="cart-items">
     {% for it in items %}
-      <tr>
-        <td>{{ it[0] }}</td>
-        <td>{{ it[1] }}</td>
-        <td>{{ it[2] }}</td>
-        <td>{{ it[3] }}</td>
-        <td>{{ it[4] }}</td>
-        <td>${{ it[5] }}</td>
-        <td>
-          <form action="{{ url_for('remove_from_cart', pet_id=it[2]) }}" method="post" style="display:inline;">
-            <button class="btn btn-sm btn-danger">Remove</button>
-          </form>
-        </td>
-      </tr>
+
+    <div class="cart-box">
+      <div class="cart-img">
+        <img
+          src="{{ url_for('static', filename='../static/pet-imgs/' + it[2]|string + '.png') }}"
+          alt="Pet {{ it[1] }}"
+          alt="Holder"
+          class=""
+        />
+      </div>
+      <div class="cart-text">
+        <div class="cart-main-text">
+          <p class="cart-pet-name">{{it[3]}}</p>
+          <p class="cart-species">Species: {{it[4]}}</p>
+          <p class="cart-pet-id">Pet ID: {{it[2]}}</p>
+        </div>
+        <p class="pet-cart-price">${{it[5]}}</p>
+      </div>
+      <div class="cart-ids">
+        <p class="">Cart Item ID: {{it[1]}}</p>
+        <p class="">Cart ID: {{it[0]}}</p>
+      </div>
+      <div class="delete">
+        <form
+          action="{{ url_for('remove_from_cart', pet_id=it[2]) }}"
+          method="post"
+          style="display: inline"
+        >
+          <button class="rmv-btn">
+            <img src="../static/imgs/trash.svg" alt="" />
+          </button>
+        </form>
+      </div>
+    </div>
     {% endfor %}
-    </tbody>
-  </table>
-  <form action="{{ url_for('checkout') }}" method="post">
-    <button class="btn btn-primary">Checkout</button>
-  </form>
-{% else %}
-  <p class="text-muted">Your cart is empty.</p>
-{% endif %}
-{% endblock %}
+  </div>
+  <div class="cart-summary">
+    <h3>Order Summary</h3>
+    <div class="top-items">
+      <div class="top-3">
+        <p class="op-top">Total items:</p>
+        <p>{{ items|length }}</p>
+      </div>
+      <div class="top-3">
+        <p class="op-top">Subtotal:</p>
+        <p class="cart-subtotal">${{ "%.2f"|format(subtotal) }}</p>
+      </div>
+      <div class="top-3">
+        <p class="op-top">Tax (13%):</p>
+        <p>${{ "%.2f"|format(tax) }}</p>
+      </div>
+    </div>
+    <div class="top-3">
+      <div class="op-top">Total:</div>
+      <p class="cart-total">${{ "%.2f"|format(total) }}</p>
+    </div>
+    <form action="{{ url_for('checkout') }}" method="post">
+      <button class="cart-checkout">Checkout</button>
+    </form>
+    {% if subtotal and subtotal > 0 %} {% endif %}
+  </div>
+</div>
+{% endif %} {% if items %} {% else %}
+<p class="text-muted">Your cart is empty.</p>
+{% endif %} {% endblock %}

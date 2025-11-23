@@ -3,14 +3,23 @@
   src: url(inter.ttf); /* url of the font */
 }
 
+.message-safe {
+  margin-left: 40px;
+}
+
 :root {
   --off-white: #f8f8f8;
+  --off-black: #232323;
 }
 
 * {
   font-family: myFont, "sans-serif"; /* use the font */
   margin: 0;
   padding: 0;
+}
+
+body {
+  color: black;
 }
 
 .links,
@@ -22,17 +31,18 @@
 
 .logo p {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 11px;
 }
 
 .cart img {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
+  display: flex;
 }
 
 .logo img {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
 }
 
 .logo {
@@ -46,7 +56,7 @@
 .links {
   gap: 10vw;
   font-size: 15px;
-  font-weight: 400;
+  font-weight: 600;
 }
 
 header {
@@ -55,14 +65,23 @@ header {
 }
 
 .header-wrap {
-  background-color: var(--off-white);
+  background-color: black;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-radius: 25px;
   height: 100%;
-  padding: 5px 0;
+  padding: 8px 0;
+}
+
+.links a {
+  color: var(--off-white);
+}
+
+.cart img,
+.logo {
+  filter: invert(1);
 }
 
 a {
@@ -92,7 +111,7 @@ a {
   position: absolute;
   width: 100%;
   overflow-y: hidden;
-  max-height: 80vh;
+  max-height: 90vh;
   top: 0;
 }
 
@@ -211,17 +230,17 @@ a {
   border: 1px solid black;
 }
 
-.ava-pets {
+.page-head {
   margin: 40px 40px;
   /* margin-bottom: 20px; */
 }
 
-.ava-pets h2 {
+.page-head h2 {
   font-size: 50px;
   font-weight: 600;
 }
 
-.ava-pets p {
+.page-head p {
   font-size: 15px;
   font-weight: 400;
 }
@@ -304,4 +323,144 @@ a {
   position: absolute;
   bottom: 15px;
   right: 10px;
+}
+
+.cart-box {
+  height: fit-content;
+  display: flex;
+  position: relative;
+}
+
+.cart-items {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  width: 60%;
+  border-radius: 25px;
+  padding: 10px;
+  height: fit-content;
+}
+
+.cart-summary {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 25px;
+  padding: 10px;
+  width: 40%;
+  padding-left: 15px;
+}
+
+.cart-summary h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.cart-total {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.top-3 {
+  display: flex;
+  justify-content: space-between;
+}
+
+.op-top {
+  opacity: 75%;
+}
+
+.top-items {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 14px;
+}
+
+.cart-total {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.cart-checkout {
+  width: 100%;
+  background-color: black;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+.full-cart {
+  display: flex;
+  margin: 0 40px;
+  gap: 10px;
+}
+
+.cart-img img {
+  height: 80px;
+  width: 80px;
+}
+
+.cart-img {
+  overflow: hidden;
+  background-color: var(--off-white);
+  border-radius: 25px;
+}
+
+.cart-pet-name {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.rmv-btn {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+}
+.rmv-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.delete {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+
+.pet-cart-price {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.cart-species,
+.cart-pet-id {
+  font-size: 12px;
+  opacity: 50%;
+}
+
+.cart-text {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-content: space-between;
+}
+
+.cart-ids {
+  text-align: right;
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  font-size: 10px;
+}
+
+.text-muted {
+  color: gray;
+  font-size: 25px;
+  text-align: center;
 }
