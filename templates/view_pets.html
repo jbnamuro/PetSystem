@@ -4,13 +4,149 @@
   <p>Find pets by rarity, price and lifestyle needs.</p>
 </div>
 
-<div class="search-bar">
-  <input
-    id="pet-search"
-    type="search"
-    placeholder="Search pets by name, rarity, ID, maintenance or price"
-  />
-</div>
+<form class="search-bar" method="GET" action="{{ url_for('view_pets') }}">
+  <!-- General Search-->
+  <div class="filter-group">
+    <label for="pet-search">Search</label>
+    <input
+      id="pet-search"
+      name="pet-name"
+      type="search"
+      placeholder="Search pets by name"
+      value="{{ request.args.get('pet-name', '') }}"
+    />
+  </div>
+
+  <!-- Species Filter-->
+  <div class="filter-group">
+    <label for="species-filter">Species</label>
+    <select id="species-filter" name="species">
+      <option value="">All Species</option>
+      {% for sp in species %}
+      <option value="{{ sp[0] }}"
+        {% if request.args.get('species') == sp[0] | string %}
+          selected
+        {% endif %}>
+        {{ sp[1] }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Rarity Filter-->
+  <div class="filter-group">
+    <label for="rarity-filter">Rarity Level</label>
+    <select id="rarity-filter" name="rarity">
+      <option value="">All Rarities</option>
+      {% for r in rarities %}
+        <option value="{{ r[0] }}"
+        {% if request.args.get('rarity') == r[0] | string %}
+          selected
+        {% endif %}>
+        {{ r[1] }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Maintenance Filter-->
+  <div class="filter-group">
+    <label for="maintenance-filter">Maintenance Level</label>
+    <select id="maintenance-filter" name="maintenance">
+      <option value="">All Maintenance</option>
+      {% for m in maintenance %}
+      <option value="{{ m[0] }}"
+        {% if request.args.get('maintenance') == m[0] | string %}
+          selected
+        {% endif %}>
+        {{ m[1] }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Min Price -->
+  <div class="filter-group">
+    <label for="min-price">Min Price</label>
+    <input
+      id="min-price"
+      name="min-price"
+      type="number"
+      step="0.01"
+      min="0"
+      placeholder="Min Price"
+      value="{{ request.args.get('min-price', '') }}"
+    />
+  </div>
+
+  <!-- Max Price -->
+  <div class="filter-group">
+    <label for="max-price">Max Price</label>
+    <input
+      id="max-price"
+      name="max-price"
+      type="number"
+      step="0.01"
+      min="0"
+      placeholder="Max Price"
+      value="{{ request.args.get('max-price', '') }}"
+    />
+  </div>
+
+  <!-- Sort By -->
+  <div class="filter-group">
+    <label for="sort-by">Sort By</label>
+    {% set sort_fields = [
+      ("DateAdded", "Newest"),
+      ("PetName", "Name"),
+      ("Rarity", "Rarity"),
+      ("Maintenance", "Maintenance"),
+      ("Species", "Species"),
+      ("Price", "Price")
+    ] %}
+
+    <select id="sort-by" name="sort-by">
+      {% for value, label in sort_fields %}
+        <option value="{{ value }}" 
+          {% if request.args.get("sort-by", "DateAdded") == value %}selected{% endif %}>
+          {{ label }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Sort Direction -->
+  <div class="filter-group">
+    <label for="sort-dir">Sort Direction</label>
+    {% set sort_dirs = [
+      ("DESC", "Descending"),
+      ("ASC", "Ascending")
+    ] %}
+
+    <select id="sort-dir" name="sort-dir">
+      {% for value, label in sort_dirs %}
+        <option value="{{ value }}"
+          {% if request.args.get("sort-dir", "DESC") == value %}selected{% endif %}>
+          {{ label }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!--Clear-->
+  <div class="filter-group">
+    <label>&nbsp;</label>
+    <a href="{{ url_for('view_pets') }}" class="clear-btn">
+      Clear
+    </a>
+  </div>
+
+  <!--Submit-->
+  <div class="filter-group">
+    <label>&nbsp;</label>
+    <button type="submit" class="filter-btn">Apply</button>
+  </div>
+</form>
 
 <div class="pet-card-cont">
   {% for p in pets %}
@@ -24,6 +160,7 @@
       />
     </div>
     <p class="pet-name">{{p[1]}}</p>
+    <p class="pet-species">{{p[2]}}</p>
     <p class="pet-maint">{{p[4]}}</p>
     <p class="pet-price">${{p[6]}}</p>
     <form action="{{ url_for('add_to_cart', pet_id=p[0]) }}" method="post">
@@ -35,38 +172,4 @@
   </div>
   {% endfor %}
 </div>
-<script>
-  // Client-side search/filter for pet cards
-  document.addEventListener("DOMContentLoaded", function () {
-    const input = document.getElementById("pet-search");
-    if (!input) return;
-    const cardsContainer = document.querySelector(".pet-card-cont");
-    const cards = () =>
-      cardsContainer
-        ? Array.from(cardsContainer.querySelectorAll(".pet-card"))
-        : [];
-
-    function normalize(text) {
-      return (text || "").toString().toLowerCase();
-    }
-
-    input.addEventListener("input", function () {
-      const q = normalize(this.value).trim();
-      if (!q) {
-        cards().forEach((c) => (c.style.display = ""));
-        return;
-      }
-
-      cards().forEach((card) => {
-        const name = normalize(card.querySelector(".pet-name")?.textContent);
-        const rarity = normalize(card.querySelector(".rarity")?.textContent);
-        const id = normalize(card.querySelector(".pet-id")?.textContent);
-        const maint = normalize(card.querySelector(".pet-maint")?.textContent);
-        const price = normalize(card.querySelector(".pet-price")?.textContent);
-        const hay = [name, rarity, id, maint, price].join(" ");
-        card.style.display = hay.includes(q) ? "" : "none";
-      });
-    });
-  });
-</script>
 {% endblock %}

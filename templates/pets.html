@@ -8,6 +8,7 @@
 <div class="pet-mng-cont">
   <p>Add new pet.</p>
   <form action="{{ url_for('add_pet') }}" method="POST" class="row g-2 mb-4">
+    <!-- Name Input-->
     <div class="col-md-3">
       <input
         type="text"
@@ -17,15 +18,7 @@
         required
       />
     </div>
-    <div class="col-md-2">
-      <input
-        type="number"
-        name="species"
-        class="form-control"
-        placeholder="SpeciesID"
-        required
-      />
-    </div>
+    <!-- Price Input-->
     <div class="col-md-2">
       <input
         type="number"
@@ -33,27 +26,42 @@
         name="price"
         class="form-control"
         placeholder="Price"
+        min="0"
         required
       />
     </div>
-    <div class="col-md-2">
-      <input
-        type="number"
-        name="rarity"
-        class="form-control"
-        placeholder="RarityID"
-        required
-      />
+
+    <!-- Species Input-->
+    <div class="col-md-3">
+      <select name="species" class="form-control" required>
+        <option value="">Select Species</option>
+        {% for sp in species %}
+        <option value="{{ sp[0] }}">{{ sp[1] }}</option>
+        {% endfor %}
+      </select>
     </div>
-    <div class="col-md-2">
-      <input
-        type="number"
-        name="maintenance"
-        class="form-control"
-        placeholder="MaintenanceID"
-        required
-      />
+
+    <!-- Rarity Input-->
+    <div class="col-md-3">
+      <select name="rarity" class="form-control" required>
+        <option value="">Select Rarity</option>
+        {% for r in rarities %}
+        <option value="{{ r[0] }}">{{ r[1] }}</option>
+        {% endfor %}
+      </select>
     </div>
+
+    <!-- Maintenance Input-->
+    <div class="col-md-3">
+      <select name="maintenance" class="form-control" required>
+        <option value="">Select Maintenance</option>
+        {% for m in maintenance %}
+        <option value="{{ m[0] }}">{{ m[1] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!--Add Button-->
     <div class="col-md-1">
       <button class="add-btn">Add</button>
     </div>

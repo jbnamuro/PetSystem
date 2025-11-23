@@ -93,9 +93,14 @@ def pets():
         return redirect(url_for("login"))
     # Use browse_pets with defaults to fetch all
     pets = call_proc_fetchall('browse_pets', (1000, 1, 'DateAdded', 'DESC', None, None, None, None, None, None, None))
+
+    species = get_all_species()
+    rarities = get_all_rarity_levels()
+    maintenance = get_all_maintenance_levels()
+
     # browse_pets returns rows with many columns: map to what template expects
     # We'll pass raw rows and template will index into them
-    return render_template("pets.html", pets=pets, role=session.get("role"))
+    return render_template("pets.html", pets=pets, role=session.get("role"), species=species, rarities=rarities, maintenance=maintenance)
 
 @app.route("/add_pet", methods=["POST"])
 def add_pet():
@@ -173,15 +178,57 @@ def delete_pet(pet_id):
         flash(f"Failed to remove pet: {e}", "danger")
     return redirect(url_for("pets"))
 
+# Helper functions
+def get_all_species():
+    db = get_db_connection()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM species")
+    species = cursor.fetchall()
+    cursor.close()
+    db.close()
+    return species
+
+def get_all_rarity_levels():
+    db = get_db_connection()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM raritylevels")
+    raritylevels = cursor.fetchall()
+    cursor.close()
+    db.close()
+    return raritylevels
+
+def get_all_maintenance_levels():
+    db = get_db_connection()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM maintenancelevels")
+    maintenancelevels = cursor.fetchall()
+    cursor.close()
+    db.close()
+    return maintenancelevels
+
 # ----------------
 # View Pets (Users)
 # ----------------
 @app.route("/view_pets")
 def view_pets():
+    species = get_all_species()
+    rarities = get_all_rarity_levels()
+    maintenance = get_all_maintenance_levels()
+
+    # Reading filters from query string
+    species_id = request.args.get("species", type=int)
+    rarity_id = request.args.get("rarity", type=int)
+    maintenance_id = request.args.get("maintenance", type=int)
+    min_price = request.args.get("min-price", type=float)
+    max_price = request.args.get("max-price", type=float)
+    sort_by = request.args.get("sort-by") or "DateAdded"
+    sort_dir = request.args.get("sort-dir") or "DESC"
+    name_filter = request.args.get("pet-name") or None
+
     # For users: use browse_pets but filter to available
-    pets = call_proc_fetchall('browse_pets', (1000, 1, 'DateAdded', 'DESC', None, None, None, None, 'Available', None, None))
+    pets = call_proc_fetchall('browse_pets', (1000, 1, sort_by, sort_dir, rarity_id, maintenance_id, species_id, name_filter, 'Available', min_price, max_price))
     # browse_pets columns: PetID, PetName, SpeciesName, RarityName, MaintenanceName, Status, Price, DateAdded, SpritePath, SoundPath
-    return render_template("view_pets.html", pets=pets)
+    return render_template("view_pets.html", pets=pets, species=species, rarities=rarities, maintenance=maintenance)
 
 # ----------------
 # Cart endpoints

@@ -15,11 +15,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Create DB
-CREATE DATABASE IF NOT EXISTS petsystem;
-USE petsystem;
-
-
 --
 -- Table structure for table `cartitems`
 --
@@ -47,6 +42,47 @@ LOCK TABLES `cartitems` WRITE;
 /*!40000 ALTER TABLE `cartitems` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cartitems` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_before_add_to_cart` BEFORE INSERT ON `cartitems` FOR EACH ROW BEGIN
+    -- Ensure pet is still available
+    IF (SELECT Status FROM pets WHERE PetID = NEW.PetID) <> 'Available' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Pet is not available.';
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_after_add_to_cart` AFTER INSERT ON `cartitems` FOR EACH ROW BEGIN
+    -- Mark pet as reserved
+    UPDATE pets
+    SET Status = 'Reserved'
+    WHERE PetID = NEW.PetID;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `maintenancelevels`
@@ -101,6 +137,54 @@ LOCK TABLES `orderitems` WRITE;
 INSERT INTO `orderitems` VALUES (1,1,2,0.00),(2,1,3,0.00),(4,2,2,0.00),(5,2,3,0.00),(7,3,1,200.00),(8,4,4,0.00);
 /*!40000 ALTER TABLE `orderitems` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_before_insert_orderitem` BEFORE INSERT ON `orderitems` FOR EACH ROW BEGIN
+    DECLARE pet_price DECIMAL(10,2);
+
+    -- Load price automatically
+    SELECT Price INTO pet_price FROM pets WHERE PetID = NEW.PetID;
+    SET NEW.Price = pet_price;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_after_insert_orderitem` AFTER INSERT ON `orderitems` FOR EACH ROW BEGIN
+    -- Update Total Price in Orders table
+    UPDATE orders
+    SET TotalPrice = (
+        SELECT SUM(Price) FROM orderitems WHERE OrderID = NEW.OrderID
+    )
+    WHERE OrderID = NEW.OrderID;
+    
+    -- Mark Pet as Adopted
+    UPDATE pets
+    SET Status = 'Adopted'
+    WHERE PetID = NEW.PetID;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `orders`
@@ -129,6 +213,27 @@ LOCK TABLES `orders` WRITE;
 INSERT INTO `orders` VALUES (1,3,'2025-11-06 12:13:09',0.00),(2,3,'2025-11-06 12:15:03',0.00),(3,4,'2025-11-06 12:19:27',200.00),(4,3,'2025-11-06 15:36:15',0.00);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_after_order_created` AFTER INSERT ON `orders` FOR EACH ROW BEGIN
+    -- Empty user cart after successful order
+    DELETE FROM cartitems
+    WHERE CartID IN (
+        SELECT CartID FROM shoppingcart WHERE UserID = NEW.UserID
+    );
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `pets`
@@ -168,6 +273,26 @@ LOCK TABLES `pets` WRITE;
 INSERT INTO `pets` VALUES (1,'Fluffy',NULL,2,200.00,'Adopted',1,2,'sprites/fluffy.png','sounds/fluffy_bark.mp3','2025-10-23 15:15:55'),(2,'Shadow',NULL,2,0.00,'Adopted',3,3,'sprites/shadow.png','sounds/shadow_growl.mp3','2025-10-23 15:15:55'),(3,'Bubbles',NULL,2,0.00,'Adopted',2,1,'sprites/bubbles.png','sounds/bubbles_chirp.mp3','2025-10-23 15:15:55'),(4,'Nibbles',NULL,2,0.00,'Adopted',1,1,'sprites/nibbles.png','sounds/nibbles squeak.mp3','2025-10-23 15:15:55'),(5,'Luna','Loves to nap in sunny spots',1,349.99,'Reserved',2,3,'img/luna.png','sound/luna.mp3','2025-11-06 16:33:59'),(6,'Scooby','Friendly pup',1,250.00,'Available',2,3,'img/Scooby.png',NULL,'2025-11-06 16:35:33');
 /*!40000 ALTER TABLE `pets` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_after_pet_adopted_cleanup` AFTER UPDATE ON `pets` FOR EACH ROW BEGIN
+    -- If pet became adopted, remove all cart references
+    IF NEW.Status = 'Adopted' THEN
+        DELETE FROM cartitems WHERE PetID = NEW.PetID;
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `raritylevels`
@@ -270,10 +395,6 @@ LOCK TABLES `users` WRITE;
 INSERT INTO `users` VALUES (1,'admin_user','hashed_admin_pw','Admin'),(2,'staff_member','hashed_staff_pw','Staff'),(3,'user_jane','hashed_user_pw1','User'),(4,'user_john','hashed_user_pw2','User'),(5,'Maxwell','password123','User'),(6,'Jacob','pass123','Staff'),(7,'Bob','pass123','Admin');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping events for database 'petsystem'
---
 
 --
 -- Dumping routines for database 'petsystem'
@@ -429,7 +550,7 @@ BEGIN
 		SET @base := CONCAT(@base, ' AND p.MaintenanceID = ', p_maintenance_id);
 	END IF;
 	IF p_name_like IS NOT NULL THEN 
-		SET @base := CONCAT(@base, " AND p.PetName LIKE '", p_name_like, "'");
+		SET @base := CONCAT(@base, " AND p.PetName LIKE '%", p_name_like, "%'");
 	END IF;
 	IF p_species_id IS NOT NULL THEN 
 		SET @base = CONCAT(@base, ' AND p.SpeciesID = ', p_species_id);  
@@ -566,112 +687,6 @@ BEGIN
 	-- Return final order summary
 	CALL get_order_details(v_order_id);
 END ;;
-
-
-/*!50003 DROP TRIGGER IF EXISTS `trg_before_add_to_cart` */;
-DELIMITER ;;
-CREATE TRIGGER `trg_before_add_to_cart`
-BEFORE INSERT ON cartitems
-FOR EACH ROW
-BEGIN
-    -- Ensure pet is still available
-    IF (SELECT Status FROM pets WHERE PetID = NEW.PetID) <> 'Available' THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Pet is not available.';
-    END IF;
-END;;
-DELIMITER ;
-
-
-
-/*!50003 DROP TRIGGER IF EXISTS `trg_after_add_to_cart` */;
-DELIMITER ;;
-CREATE TRIGGER `trg_after_add_to_cart`
-AFTER INSERT ON cartitems
-FOR EACH ROW
-BEGIN
-    -- Mark pet as reserved
-    UPDATE pets
-    SET Status = 'Reserved'
-    WHERE PetID = NEW.PetID;
-END;;
-DELIMITER ;
-
-
-
-/*!50003 DROP TRIGGER IF EXISTS `trg_after_insert_orderitem` */;
-DELIMITER ;;
-CREATE TRIGGER `trg_after_insert_orderitem`
-AFTER INSERT ON orderitems
-FOR EACH ROW
-BEGIN
-    -- Update Total Price in Orders table
-    UPDATE orders
-    SET TotalPrice = (
-        SELECT SUM(Price) FROM orderitems WHERE OrderID = NEW.OrderID
-    )
-    WHERE OrderID = NEW.OrderID;
-    
-    -- Mark Pet as Adopted
-    UPDATE pets
-    SET Status = 'Adopted'
-    WHERE PetID = NEW.PetID;
-END;;
-DELIMITER ;
-
-
-
-/*!50003 DROP TRIGGER IF EXISTS `trg_before_insert_orderitem` */;
-DELIMITER ;;
-CREATE TRIGGER `trg_before_insert_orderitem`
-BEFORE INSERT ON orderitems
-FOR EACH ROW
-BEGIN
-    DECLARE pet_price DECIMAL(10,2);
-
-    -- Load price automatically
-    SELECT Price INTO pet_price FROM pets WHERE PetID = NEW.PetID;
-    SET NEW.Price = pet_price;
-END;;
-DELIMITER ;
-
-
-
-/*!50003 DROP TRIGGER IF EXISTS `trg_after_pet_adopted_cleanup` */;
-DELIMITER ;;
-CREATE TRIGGER `trg_after_pet_adopted_cleanup`
-AFTER UPDATE ON pets
-FOR EACH ROW
-BEGIN
-    -- If pet became adopted, remove all cart references
-    IF NEW.Status = 'Adopted' THEN
-        DELETE FROM cartitems WHERE PetID = NEW.PetID;
-    END IF;
-END;;
-DELIMITER ;
-
-
-
-/*!50003 DROP TRIGGER IF EXISTS `trg_after_order_created` */;
-DELIMITER ;;
-CREATE TRIGGER `trg_after_order_created`
-AFTER INSERT ON orders
-FOR EACH ROW
-BEGIN
-    -- Empty user cart after successful order
-    DELETE FROM cartitems
-    WHERE CartID IN (
-        SELECT CartID FROM shoppingcart WHERE UserID = NEW.UserID
-    );
-END;;
-DELIMITER ;
-
-
-
-
-
-
-
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1157,4 +1172,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-09 17:13:52
+-- Dump completed on 2025-11-23 16:25:46

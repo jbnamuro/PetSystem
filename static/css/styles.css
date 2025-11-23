@@ -1,6 +1,8 @@
 @font-face {
-  font-family: myFont; /* set name */
-  src: url(inter.ttf); /* url of the font */
+  font-family: myFont;
+  /* set name */
+  src: url(inter.ttf);
+  /* url of the font */
 }
 
 body {
@@ -38,7 +40,8 @@ body {
 }
 
 * {
-  font-family: myFont, "sans-serif"; /* use the font */
+  font-family: myFont, "sans-serif";
+  /* use the font */
   margin: 0;
   padding: 0;
 }
@@ -166,6 +169,7 @@ a {
 .box-c3 {
   background-color: #f4b474;
 }
+
 .box-c1,
 .box-c2,
 .box-c3 {
@@ -248,15 +252,67 @@ a {
 }
 
 .search-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
   margin-left: 40px;
   margin-bottom: 20px;
 }
 
-#pet-search {
+.search-bar input,
+.search-bar select,
+.filter-btn,
+.clear-btn {
   padding: 10px;
   border-radius: 25px;
-  width: 400px;
   border: 1px solid black;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.filter-group label {
+  margin-left: 5px;
+  font-size: 13px;
+  color: #444;
+}
+
+/* Width overrides */
+#pet-search {
+  width: 200px;
+}
+
+#rarity-filter,
+#species-filter {
+  width: 125px;
+}
+
+#maintenance-filter,
+#sort-by,
+#sort-dir {
+  width: 175px;
+}
+
+#min-price,
+#max-price {
+  width: 100px;
+}
+
+.filter-btn,
+.clear-btn {
+  background-color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.filter-btn:hover,
+.clear-btn:hover {
+  background-color: #bbbbbb;
 }
 
 .page-head {
@@ -309,6 +365,7 @@ a {
   gap: 15px;
   padding: 0 40px;
   flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
 .rarity {
@@ -352,6 +409,13 @@ a {
 .pet-maint {
   font-size: 12px;
   opacity: 50%;
+}
+
+.pet-species {
+  opacity: 50%;
+  font-size: 16px;
+  margin-top: 12px;
+  margin-bottom: 4px;
 }
 
 .pet-price {
@@ -468,6 +532,7 @@ a {
   background-color: transparent;
   border: none;
 }
+
 .rmv-btn img {
   width: 20px;
   height: 20px;
@@ -521,6 +586,7 @@ table {
   width: 100%;
   box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
   border-radius: 25px;
+  margin-bottom: 20px;
 }
 
 thead {
@@ -562,6 +628,13 @@ th:last-child {
   border: 1px solid black;
   padding: 10px;
   width: 120px;
+}
+
+.pet-mng-cont div select {
+  border-radius: 25px;
+  border: 1px solid black;
+  padding: 10px;
+  width: 200px;
 }
 
 .pet-mng-cont form {
