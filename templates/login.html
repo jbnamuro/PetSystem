@@ -1,27 +1,37 @@
 {% extends "base.html" %} {% block content %}
-<div class="row" style="margin-top: 120px">
-  <div class="col-md-4 offset-md-4">
-    <h3 class="mb-3 text-center">Login</h3>
-    <form method="POST">
-      <input
-        name="username"
-        class="form-control mb-2"
-        placeholder="Username"
-        required
-      />
-      <input
-        type="password"
-        name="password"
-        class="form-control mb-3"
-        placeholder="Password"
-        required
-      />
-      <button class="btn btn-dark w-100">Login</button>
-    </form>
-    <hr />
-    <p class="text-muted small">
-      Test accounts (from DB): admin_user / hashed_admin_pw, staff_member /
-      hashed_staff_pw, Maxwell / password123
+<div class="login-bg"></div>
+<div class="login">
+  <div class="login-text">
+    <h2>Pet System</h2>
+    <p>Find your next best friend.</p>
+  </div>
+  <div class="login-right">
+    <div class="login-section">
+      <h3 class="mb-3 text-center">Get Started Now</h3>
+      <p class="please-message">Please Log into your account to continue</p>
+      <form method="POST">
+        <input
+          name="username"
+          class="form-control mb-2"
+          placeholder="Username"
+          required
+        />
+        <br />
+        <input
+          type="password"
+          name="password"
+          class="form-control mb-3"
+          placeholder="Password"
+          required
+        />
+        <br />
+        <button class="login-button">Login</button>
+      </form>
+    </div>
+    <p class="login-help">
+      Test accounts (from DB): <br />
+      admin_user / hashed_admin_pw <br />
+      staff_member / hashed_staff_pw <br />Maxwell / password123
     </p>
   </div>
 </div>
