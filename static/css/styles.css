@@ -94,7 +94,8 @@ body {
 }
 
 .login-section {
-  width: fit-content;
+  width: 100%;
+  margin: 0 10%;
 }
 
 .login-text {
