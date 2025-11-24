@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block content %}
+<div class="page-head">
+  <!-- <p>Home > Cart</p> -->
+  <h2>Reciept</h2>
+</div>
+
+<div class="table-cont">
+  <table class="">
+    <thead class="">
+      <tr class="header-tr">
+        <th style="width: 15%">No.</th>
+        <th style="width: 23%">Pet Name</th>
+        <th style="width: 23%">Species</th>
+        <th style="width: 23%">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td>{{loop.index}}</td>
+        <td>{{ o[3] }}</td>
+        <td>{{ o[4] }}</td>
+        <td>${{ o[5] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

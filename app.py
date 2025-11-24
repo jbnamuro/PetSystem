@@ -287,7 +287,7 @@ def checkout():
         order_summary = call_proc_fetchall('checkout_cart', (session["user_id"],))
         flash("Checkout completed.", "success")
         # Render order details if returned
-        return render_template("orders.html", orders=order_summary, role=session.get("role"))
+        return render_template("reciept.html", orders=order_summary, role=session.get("role"))
     except Exception as e:
         flash(f"Checkout failed: {e}", "danger")
         return redirect(url_for("cart"))
