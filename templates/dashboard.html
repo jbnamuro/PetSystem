@@ -11,7 +11,7 @@
 
   {% if role == 'Admin' %}
   <div class="box-container">
-    <a class="btn-info" href="{{ url_for('users') }}">
+    <a class="btn-info boxes" href="{{ url_for('users') }}">
       <div class="box-c1">
         <div class="home-box">
           <div>
@@ -22,7 +22,7 @@
         </div>
       </div>
     </a>
-    <a class="btn btn-info me-2" href="{{ url_for('pets') }}">
+    <a class="btn btn-info me-2 boxes" href="{{ url_for('pets') }}">
       <div class="box-c2">
         <div class="home-box">
           <div>
@@ -34,7 +34,7 @@
       </div>
     </a>
     <a class="btn btn-info" href="{{ url_for('orders') }}"
-      ><div class="box-c3">
+      ><div class="box-c3 boxes">
         <div class="home-box">
           <div>
             <img src="../static/imgs/order.svg" alt="" />
@@ -133,6 +133,33 @@
   </div>
 </div>
 
-<script></script>
+<script>
+  gsap.from([".box-c1", ".box-c2", ".box-c3"], {
+    y: 25,
+    opacity: 0,
+    stagger: 0.1,
+    duration: 1,
+    ease: "power3.out",
+  });
+  gsap.from([".pet-box"], {
+    y: 25,
+    opacity: 0,
+    stagger: 0.1,
+    duration: 1,
+    ease: "power3.out",
+  });
+
+  let find = SplitText.create([".find", ".welcome"], {
+    type: "words",
+    mask: "words",
+  });
+
+  gsap.from(find.words, {
+    stagger: 0.08,
+    opacity: 0,
+    duration: 1,
+    ease: "power2.out",
+  });
+</script>
 
 {% endblock %}

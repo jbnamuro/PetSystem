@@ -25,7 +25,7 @@
     </thead>
     <tbody>
       {% for o in orders %}
-      <tr>
+      <tr class="order-content">
         {% if role in ['Admin', 'Staff'] %}
         <td>{{loop.index}}</td>
         <td>{{ o[0] }}</td>
@@ -43,4 +43,14 @@
     </tbody>
   </table>
 </div>
+
+<script>
+  gsap.from(".order-content", {
+    opacity: 0,
+    y: 8,
+    duration: 1,
+    ease: "power4.out",
+    stagger: 0.05,
+  });
+</script>
 {% endblock %}

@@ -48,7 +48,7 @@
     </thead>
     <tbody>
       {% for u in users %}
-      <tr>
+      <tr class="users-listing">
         <td>{{ u[0] }}</td>
         <td>{{ u[1] }}</td>
         <td>{{ u[2] }}</td>
@@ -57,5 +57,14 @@
     </tbody>
   </table>
 </div>
+<script>
+  gsap.from(".users-listing", {
+    opacity: 0,
+    y: 8,
+    duration: 1,
+    ease: "power4.out",
+    stagger: 0.05,
+  });
+</script>
 
 {% endblock %}

@@ -73,4 +73,20 @@
 </div>
 {% endif %} {% if items %} {% else %}
 <p class="text-muted">Your cart is empty.</p>
-{% endif %} {% endblock %}
+
+{% endif %}
+<script>
+  gsap.from(".cart-box", {
+    opacity: 0,
+    stagger: 0.1,
+    duration: 1,
+    ease: "power3.out",
+  });
+
+  gsap.from(".cart-summary", {
+    opacity: 0,
+    duration: 1,
+    ease: "power3.out",
+  });
+</script>
+{% endblock %}

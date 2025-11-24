@@ -305,6 +305,7 @@ a {
   display: flex;
   gap: 20px;
   padding: 20px 40px;
+  flex-wrap: wrap;
 }
 
 .pet-box {

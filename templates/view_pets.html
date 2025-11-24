@@ -172,4 +172,13 @@
   </div>
   {% endfor %}
 </div>
+<script>
+    gsap.from([".pet-card"], {
+    y: 25,
+    opacity: 0,
+    stagger: 0.06,
+    duration: 1,
+    ease: "power3.out",
+  });
+</script>
 {% endblock %}
