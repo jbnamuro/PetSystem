@@ -38,4 +38,5 @@ Set Environment Vars: Configure MYSQL_USER and MYSQL_PASSWORD
 Run app: python app.py
 
 👥 The Team
+
 Built by Jabari Namuro, Haydar Beydoun, Raad Islam, and Zakaria Hussein.
